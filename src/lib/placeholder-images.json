@@ -1,0 +1,10 @@
+{
+  "placeholderImages": [
+    {
+      "id": "hero",
+      "description": "Abstract hero image for the landing page.",
+      "imageUrl": "https://picsum.photos/seed/tech-abstract/1400/900",
+      "imageHint": "abstract tech"
+    }
+  ]
+}

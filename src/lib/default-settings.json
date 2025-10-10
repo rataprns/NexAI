@@ -1,0 +1,198 @@
+
+{
+  "appName": "NexAI",
+  "theme": "default",
+  "contactEmail": "contact@example.com",
+  "logoUrl": "",
+  "logoIconName": "Mountain",
+  "isIconLogo": true,
+  "timezone": "America/Santiago",
+  "plugin": "googleai",
+  "model": "gemini-1.5-flash",
+  "knowledgeBase": "## Servicios de Nutrición: Tu Guía hacia una Vida Saludable\n\n¿Cansado de dietas restrictivas que no funcionan? ¿Deseas mejorar tu salud y bienestar a través de una alimentación equilibrada? En nuestro servicio de nutrición, te acompañamos en cada paso de tu camino hacia una vida más saludable y plena. \n\n**¿Qué ofrecemos?**\n\nNuestro equipo de nutricionistas certificados te brinda un servicio personalizado, basado en tus necesidades, objetivos y estilo de vida.  No se trata de dietas milagro, sino de un cambio de hábitos sostenible y adaptable a tu realidad.\n\n* **Evaluación Nutricional:**  Iniciaremos con una evaluación completa que incluye tu historial médico, estilo de vida, preferencias alimentarias y objetivos.  Utilizaremos herramientas como la antropometría (medición de peso, talla, perímetro abdominal, etc.) para determinar tu composición corporal.\n* **Plan de Alimentación Personalizado:** Desarrollaremos un plan de alimentación adaptado a ti, que incluya recetas fáciles de seguir, variedad de alimentos y menús flexibles para que puedas adaptarlos a tus actividades diarias.  Consideraremos tus alergias, intolerancias y preferencias.\n* **Educación Nutricional:**  Te proporcionaremos la educación necesaria para que puedas comprender mejor los principios de la alimentación saludable. Te enseñaremos a leer etiquetas, a elegir alimentos de calidad y a incorporar hábitos alimenticios saludables en tu rutina diaria. No se trata sólo de seguir un plan, sino de aprender a comer de manera inteligente y consciente.\n* **Seguimiento y Soporte:**  Ofrecemos un seguimiento personalizado para asegurarnos de que avances en tu plan nutricional.  Puedes programar citas regulares con tu nutricionista, quien te brindará apoyo, responderá a tus preguntas y te ayudará a superar cualquier obstáculo que encuentres.\n* **Asesoramiento en situaciones específicas:** Si tienes alguna condición médica (diabetes, hipertensión, colesterol alto, etc.), te ayudaremos a adaptar tu plan nutricional para controlar tus niveles y mejorar tu salud.  También podemos ayudarte a alcanzar objetivos específicos, como perder peso, ganar masa muscular o mejorar tu rendimiento deportivo.\n\nPara consultas, por favor contacta a:\n\n* **Nombre:**  Ana Garcia\n* **Teléfono:** +55 11 99999-8888\n* **Correo:** ana.garcia@email.com\n\n* **Nombre:**  Juan Pérez\n* **Teléfono:** +55 21 77777-6666\n* **Correo:** juan.perez@email.com",
+  "chatbotInitialMessage": "Hello! I'm the {appName} assistant. How can I help you today?",
+  "landingPage": {
+    "showFeatures": true,
+    "showTestimonials": true,
+    "showFaq": true,
+    "showContact": true,
+    "showAppointments": true,
+    "showLanguageSelector": true,
+    "showServices": true,
+    "sectionOrder": [
+      "heroSection",
+      "features",
+      "services",
+      "testimonials",
+      "appointments",
+      "faq",
+      "contact"
+    ],
+    "heroSection": {
+      "title": "Launch Your Next Project in Minutes",
+      "subtitle": "{appName} is a powerful, modular, and AI-ready Next.js boilerplate designed to launch your projects faster than ever.",
+      "ctaButton1Text": "Get Started",
+      "ctaButton2Text": "Learn More",
+      "imageUrl": "https://picsum.photos/seed/tech-abstract/1400/900",
+      "containerStyles": "relative w-full h-[80vh] flex items-center justify-center text-center",
+      "gridStyles": "relative z-10 space-y-4",
+      "titleColor": "#ffffff",
+      "subtitleColor": ""
+    },
+    "features": {
+      "badge": "Key Features",
+      "title": "Everything You Need to Build Anything",
+      "subtitle": "Our boilerplate comes packed with features designed to streamline your development process and deliver exceptional applications.",
+      "imageUrl": "https://picsum.photos/seed/features/1200/900",
+      "containerStyles": "w-full py-20 md:py-28 lg:py-32 bg-background",
+      "gridStyles": "",
+      "titleColor": "",
+      "subtitleColor": "",
+      "items": [
+        {
+          "icon": "Layers",
+          "title": "Modular Architecture",
+          "description": "Built on Clean Architecture and DDD principles for maximum scalability and maintainability."
+        },
+        {
+          "icon": "Bot",
+          "title": "Integrated AI",
+          "description": "Powered by Genkit and Gemini, with a ready-to-use chatbot and action tools."
+        },
+        {
+          "icon": "Calendar",
+          "title": "Scheduling System",
+          "description": "Complete appointment management with authentication via secret words."
+        }
+      ]
+    },
+    "testimonials": {
+      "badge": "Testimonials",
+      "title": "Loved by Developers Worldwide",
+      "subtitle": "Don't just take our word for it. Here's what developers and founders are saying about their experience.",
+      "containerStyles": "w-full py-20 md:py-28 lg:py-32 bg-background",
+      "gridStyles": "",
+      "titleColor": "",
+      "subtitleColor": "",
+      "items": [
+        {
+          "quote": "This boilerplate saved me weeks of setup time. The modular architecture is a dream to work with!",
+          "name": "Jane Doe",
+          "title": "Founder, TechCorp",
+          "avatar": "https://i.pravatar.cc/150?u=a042581f4e29026024d"
+        },
+        {
+          "quote": "The integrated AI chatbot with Genkit is incredibly powerful. I had a conversational assistant running in minutes.",
+          "name": "John Smith",
+          "title": "Lead Developer, Innovate Inc.",
+          "avatar": "https://i.pravatar.cc/150?u=a042581f4e29026704d"
+        },
+        {
+          "quote": "Finally, a Next.js starter that takes architecture seriously. Highly recommended for any serious project.",
+          "name": "Alex Johnson",
+          "title": "Freelance Developer",
+          "avatar": "https://i.pravatar.cc/150?u=a04258114e29026702d"
+        }
+      ]
+    },
+    "appointments": {
+      "badge": "Book Now",
+      "title": "Ready to Get Started?",
+      "subtitle": "Schedule a consultation with our experts today and take the first step towards achieving your goals. Our team is ready to help you find the perfect solution.",
+      "containerStyles": "w-full py-20 md:py-28 lg:py-32 bg-secondary",
+      "gridStyles": "grid gap-12 lg:grid-cols-2 lg:gap-24 items-center",
+      "titleColor": "",
+      "subtitleColor": ""
+    },
+    "faq": {
+      "badge": "FAQ",
+      "title": "Frequently Asked Questions",
+      "subtitle": "Have questions? We've got answers. If you can't find what you're looking for, feel free to contact us.",
+      "containerStyles": "w-full py-20 md:py-28 lg:py-32 bg-secondary",
+      "gridStyles": "",
+      "titleColor": "",
+      "subtitleColor": "",
+      "items": [
+        {
+          "question": "Is this boilerplate free to use?",
+          "answer": "Yes, it is completely open-source and free to use for any personal or commercial project."
+        },
+        {
+          "question": "Can I change the AI model from Gemini?",
+          "answer": "Absolutely. The Genkit integration is modular, allowing you to swap out the Gemini model for others like OpenAI's GPT or any other compatible model."
+        },
+        {
+          "question": "How do I deploy this application?",
+          "answer": "The boilerplate is optimized for deployments on Vercel, but it can be deployed on any platform that supports Next.js."
+        }
+      ]
+    },
+    "contactSection": {
+      "badge": "Contact Us",
+      "title": "Get in Touch",
+      "subtitle": "Have a question, a project idea, or just want to say hello? We'd love to hear from you.",
+      "containerStyles": "w-full py-20 md:py-28 lg:py-32 bg-background",
+      "gridStyles": "grid gap-12 lg:grid-cols-2 lg:gap-16",
+      "titleColor": "",
+      "subtitleColor": ""
+    },
+    "footer": {
+      "description": "The ultimate boilerplate for your next big idea.",
+      "linkColumns": [
+        {
+          "title": "Quick Links",
+          "links": [
+            { "text": "Features", "href": "/#features" },
+            { "text": "Testimonials", "href": "/#testimonials" },
+            { "text": "FAQ", "href": "/#faq" },
+            { "text": "Contact", "href": "/#contact" }
+          ]
+        },
+        {
+          "title": "Legal",
+          "links": [
+            { "text": "Privacy Policy", "href": "/privacy" },
+            { "text": "Terms of Service", "href": "/terms" }
+          ]
+        },
+        {
+          "title": "Connect",
+          "links": [
+            { "text": "Twitter", "href": "#" },
+            { "text": "LinkedIn", "href": "#" },
+            { "text": "GitHub", "href": "#" }
+          ]
+        }
+      ]
+    },
+    "navbar": {
+      "containerStyles": "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+      "navStyles": "container flex h-14 items-center justify-center relative",
+      "links": [
+        { "text": "Features", "href": "/#features", "visible": true },
+        { "text": "Services", "href": "/#services", "visible": true },
+        { "text": "Testimonials", "href": "/#testimonials", "visible": true },
+        { "text": "Appointments", "href": "/#appointments", "visible": true },
+        { "text": "FAQ", "href": "/#faq", "visible": true },
+        { "text": "Contact", "href": "/#contact", "visible": true }
+      ]
+    }
+  },
+  "integrations": {
+    "whatsapp": {
+      "webhookVerifyToken": "",
+      "accessToken": "",
+      "appSecret": ""
+    },
+    "messenger": {
+      "webhookVerifyToken": "",
+      "accessToken": "",
+      "appSecret": ""
+    },
+    "instagram": {
+      "webhookVerifyToken": "",
+      "accessToken": "",
+      "appSecret": ""
+    }
+  }
+}
