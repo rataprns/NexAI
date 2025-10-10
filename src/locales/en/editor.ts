@@ -43,8 +43,10 @@ export default {
         'title': 'Hero Section',
         'content': 'Content',
         'subtitleDesc': 'You can use {appName} as a placeholder for the app name.',
-        'cta1': 'CTA Button 1 Text',
-        'cta2': 'CTA Button 2 Text',
+        'cta1Text': 'CTA Button 1 Text',
+        'cta1Href': 'CTA Button 1 URL',
+        'cta2Text': 'CTA Button 2 Text',
+        'cta2Href': 'CTA Button 2 URL',
     },
 
     'features': {

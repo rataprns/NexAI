@@ -4,7 +4,9 @@ export class HeroSection {
     title: string;
     subtitle: string;
     ctaButton1Text: string;
+    ctaButton1Href?: string;
     ctaButton2Text: string;
+    ctaButton2Href?: string;
     imageUrl?: string;
     containerStyles?: string;
     gridStyles?: string;
@@ -18,7 +20,9 @@ export class HeroSection {
       title: string,
       subtitle: string,
       ctaButton1Text: string,
+      ctaButton1Href: string | undefined,
       ctaButton2Text: string,
+      ctaButton2Href: string | undefined,
       imageUrl: string | undefined,
       containerStyles: string | undefined,
       gridStyles: string | undefined,
@@ -31,7 +35,9 @@ export class HeroSection {
       this.title = title;
       this.subtitle = subtitle;
       this.ctaButton1Text = ctaButton1Text;
+      this.ctaButton1Href = ctaButton1Href;
       this.ctaButton2Text = ctaButton2Text;
+      this.ctaButton2Href = ctaButton2Href;
       this.imageUrl = imageUrl;
       this.containerStyles = containerStyles;
       this.gridStyles = gridStyles;

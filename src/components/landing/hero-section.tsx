@@ -21,8 +21,10 @@ export function HeroSection({ settings, heroSection }: HeroSectionProps) {
 
   const title = heroContent.title;
   const subtitle = heroContent.subtitle;
-  const cta1 = heroContent.ctaButton1Text;
-  const cta2 = heroContent.ctaButton2Text;
+  const cta1Text = heroContent.ctaButton1Text;
+  const cta1Href = heroContent.ctaButton1Href || "/#contact";
+  const cta2Text = heroContent.ctaButton2Text;
+  const cta2Href = heroContent.ctaButton2Href || "/#features";
   const imageUrl = heroContent.imageUrl;
   const containerStyles = heroContent.containerStyles;
   const gridStyles = heroContent.gridStyles;
@@ -63,13 +65,13 @@ export function HeroSection({ settings, heroSection }: HeroSectionProps) {
             </div>
             <div className="flex flex-col gap-4 min-[400px]:flex-row">
               <Button asChild size="lg">
-                <Link href="/admin/login">
-                  {cta1}
+                <Link href={cta1Href}>
+                  {cta1Text}
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
               <Button variant="outline" size="lg" asChild>
-                <Link href="#features">{cta2}</Link>
+                <Link href={cta2Href}>{cta2Text}</Link>
               </Button>
             </div>
           </motion.div>

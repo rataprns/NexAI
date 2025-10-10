@@ -12,6 +12,7 @@ import { HeroLayoutDialog } from "./hero-layout-dialog";
 import { TextareaWithAI } from "@/components/ui/textarea-with-ai";
 import { ColorPicker } from "@/components/ui/color-picker";
 import { useScopedI18n } from "@/locales/client";
+import { Separator } from "@/components/ui/separator";
 
 interface HeroSectionFormProps {
   control: Control<CombinedFormData>;
@@ -110,29 +111,56 @@ export function HeroSectionForm({ control }: HeroSectionFormProps) {
             </FormItem>
           )}
         />
-        <div className="grid grid-cols-2 gap-4">
-          <FormField
-            control={control}
-            name="heroSection.ctaButton1Text"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t('hero.cta1')}</FormLabel>
-                <FormControl><Input {...field} /></FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="heroSection.ctaButton2Text"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t('hero.cta2')}</FormLabel>
-                <FormControl><Input {...field} /></FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <Separator />
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <FormField
+              control={control}
+              name="heroSection.ctaButton1Text"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('hero.cta1Text')}</FormLabel>
+                  <FormControl><Input {...field} /></FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="heroSection.ctaButton1Href"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('hero.cta1Href')}</FormLabel>
+                  <FormControl><Input placeholder="/#contact" {...field} /></FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <FormField
+              control={control}
+              name="heroSection.ctaButton2Text"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('hero.cta2Text')}</FormLabel>
+                  <FormControl><Input {...field} /></FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="heroSection.ctaButton2Href"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('hero.cta2Href')}</FormLabel>
+                  <FormControl><Input placeholder="/#features" {...field} /></FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
         </div>
       </div>
       <HeroLayoutDialog 

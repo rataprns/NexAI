@@ -43,8 +43,10 @@ export default {
         'title': 'Sección Principal (Hero)',
         'content': 'Contenido',
         'subtitleDesc': 'Puedes usar {appName} como marcador de posición para el nombre de la aplicación.',
-        'cta1': 'Texto del Botón CTA 1',
-        'cta2': 'Texto del Botón CTA 2',
+        'cta1Text': 'Texto del Botón CTA 1',
+        'cta1Href': 'URL del Botón CTA 1',
+        'cta2Text': 'Texto del Botón CTA 2',
+        'cta2Href': 'URL del Botón CTA 2',
     },
 
     'features': {
