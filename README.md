@@ -1,5 +1,7 @@
 # NexAI: Modular Starter for AI-Powered Applications with Next.js
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/rataprns/NexAI)
+
 NexAI is a modern and modular template for building applications with Next.js, TypeScript, MongoDB, and Genkit. Designed under the principles of Clean Architecture and Domain-Driven Design (DDD), NexAI provides a solid foundation for creating intelligent SaaS, scheduling platforms, or AI-driven web applications.
 
 It includes an AI-powered chatbot with tools, a complete scheduling system, an administrative dashboard, and a visual landing page editor, all ready to use and customize out of the box.

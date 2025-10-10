@@ -1,5 +1,7 @@
 # NexAI — Starter Modular para Aplicaciones con IA y Next.js
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/rataprns/NexAI)
+
 NexAI es una plantilla moderna y modular para construir aplicaciones con Next.js, TypeScript, MongoDB y Genkit. Diseñada bajo principios de Clean Architecture y Domain-Driven Design (DDD), NexAI proporciona una base sólida para crear SaaS inteligentes, plataformas de agendamiento o aplicaciones web impulsadas por IA.
 
 Incluye de fábrica un chatbot con herramientas de IA, un sistema de agendamiento completo, un panel administrativo y un editor visual de landing page, todo listo para usar y personalizar.
