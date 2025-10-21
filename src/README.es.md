@@ -44,7 +44,7 @@ EMAIL_PORT=<TU_PUERTO_SMTP>
 EMAIL_USER=<TU_USUARIO_SMTP>
 EMAIL_PASS=<TU_CONTRASENA_SMTP>
 EMAIL_SECURE=false # true para SSL (puerto 465), false para TLS (puerto 587)
-PRAVI_FROM_EMAIL="Tu App <tu-email@example.com>" # Email "Desde" para los correos enviados
+FROM_EMAIL="Tu App <tu-email@example.com>" # Email "Desde" para los correos enviados
 ```
 
 ## 🚀 Ideal para

@@ -9,7 +9,7 @@ const envSchema = z.object({
   EMAIL_USER: z.string().optional(),
   EMAIL_PASS: z.string().optional(),
   EMAIL_SECURE: z.string().transform(val => val === 'true').optional(),
-  PRAVI_FROM_EMAIL: z.string().optional(),
+  FROM_EMAIL: z.string().optional(),
 });
 
 // Use `safeParse` to avoid throwing an error if `process.env` is not defined (e.g., in some client-side scenarios)
@@ -36,6 +36,6 @@ export const config = {
     user: env.EMAIL_USER,
     pass: env.EMAIL_PASS,
     secure: env.EMAIL_SECURE,
-    from: env.PRAVI_FROM_EMAIL,
+    from: env.FROM_EMAIL,
   },
 };

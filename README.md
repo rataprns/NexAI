@@ -44,7 +44,7 @@ EMAIL_PORT=<YOUR_SMTP_PORT>
 EMAIL_USER=<YOUR_SMTP_USER>
 EMAIL_PASS=<YOUR_SMTP_PASSWORD>
 EMAIL_SECURE=false # true for SSL (port 465), false for TLS (port 587)
-PRAVI_FROM_EMAIL="Your App <your-email@example.com>" # "From" email address for sent emails
+FROM_EMAIL="Your App <your-email@example.com>" # "From" email address for sent emails
 ```
 
 ## 🚀 Ideal For

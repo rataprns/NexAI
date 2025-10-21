@@ -1,4 +1,3 @@
-
 import nodemailer from 'nodemailer';
 import { IEmailService } from '../../domain/services/email.service.interface';
 import { EmailOptions } from '../../domain/entities/email-options.entity';
