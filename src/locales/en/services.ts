@@ -35,6 +35,7 @@ export default {
     'form-image-url-label': 'Image URL (Optional)',
     'form-image-url-desc': 'A representative image for your service.',
     'form-price-label': 'Price',
+    'form-offer-price-label': 'Offer Price',
     'form-currency-label': 'Currency (ISO)',
     'form-duration-label': 'Duration (minutes)',
     'form-locations-label': 'Available Locations',
@@ -44,6 +45,10 @@ export default {
     'form-add-custom-field-button': 'Add Detail',
     'custom-field-label-placeholder': 'Label (e.g., Specialist)',
     'custom-field-value-placeholder': 'Value (e.g., Dr. Smith)',
+    'form-campaign-label': 'Associated Campaign (Optional)',
+    'form-campaign-placeholder': 'Select a campaign',
+    'form-campaign-offer-title': 'Campaign Offer (Optional)',
+    'form-campaign-offer-desc': 'If this service is part of a campaign, set a special price and link it.',
 
     'dialog-cancel-button': 'Cancel',
     'dialog-save-button': 'Save Service',
@@ -53,4 +58,10 @@ export default {
     'delete-confirm-description': 'This action cannot be undone. This will permanently delete the service.',
     'delete-confirm-cancel': 'Cancel',
     'delete-confirm-delete': 'Yes, delete',
+
+    // Detail View
+    'detail-duration': 'Duration',
+    'detail-minutes': 'minutes',
+    'detail-available-at': 'Available At',
+    'detail-additional-details': 'Additional Details',
 } as const;

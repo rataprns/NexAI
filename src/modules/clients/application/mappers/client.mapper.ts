@@ -8,8 +8,11 @@ export class ClientMapper {
       clientDoc._id.toString(),
       clientDoc.name,
       clientDoc.email,
+      clientDoc.type,
       clientDoc.createdAt,
       clientDoc.updatedAt,
+      clientDoc.senderId,
+      clientDoc.channel,
       clientDoc.secretWord1,
       clientDoc.secretWord2
     );

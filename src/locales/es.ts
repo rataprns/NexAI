@@ -16,6 +16,8 @@ import channels from './es/channels';
 import analytics from './es/analytics';
 import services from './es/services';
 import locations from './es/locations';
+import campaigns from './es/campaigns';
+import chatbot from './es/chatbot';
 
 export default {
     common,
@@ -35,4 +37,8 @@ export default {
     analytics,
     services,
     locations,
+    campaigns,
+    chatbot,
 } as const;
+
+    

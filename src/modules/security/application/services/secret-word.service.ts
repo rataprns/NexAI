@@ -38,4 +38,21 @@ export class SecretWordService implements ISecretWordService {
 
     throw new Error('Failed to generate a unique word pair after multiple attempts.');
   }
+
+  async areWordsAvailable(word1: string, word2: string): Promise<{ available: boolean; existing: string[] }> {
+    const [sortedWord1, sortedWord2] = [word1, word2].sort();
+    const pairExists = await this.repository.exists(sortedWord1, sortedWord2);
+
+    if (pairExists) {
+      // Since we don't know which word caused the conflict, we can check them individually
+      // This is a simplification; a more complex check might be needed for precise feedback
+      const existing: string[] = [];
+      const w1Exists = await this.repository.isWordUsed(word1);
+      const w2Exists = await this.repository.isWordUsed(word2);
+      if (w1Exists) existing.push(word1);
+      if (w2Exists) existing.push(word2);
+      return { available: false, existing: existing.length > 0 ? existing : [word1, word2] };
+    }
+    return { available: true, existing: [] };
+  }
 }

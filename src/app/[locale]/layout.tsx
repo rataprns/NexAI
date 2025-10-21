@@ -12,6 +12,7 @@ import { ISettingService } from '@/modules/settings/domain/services/setting.serv
 import { SERVICE_KEYS } from '@/config/service-keys-const';
 import defaultSettings from '@/lib/default-settings.json';
 import { Providers } from '@/providers/providers';
+import { CampaignFloatingButton } from '@/components/landing/campaign-floating-button';
 
 const settingService = resolve<ISettingService>(SERVICE_KEYS.SettingService);
 
@@ -26,11 +27,13 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function RootLayout({
   children,
-  params: { locale }
+  params,
 }: Readonly<{
   children: ReactNode;
   params: { locale: string };
 }>) {
+  const { locale } = params;
+  
   const settings = await settingService.getSettings();
   const appName = settings?.appName || defaultSettings.appName;
   const chatbotInitialMessage = settings?.chatbotInitialMessage || defaultSettings.chatbotInitialMessage;
@@ -50,6 +53,7 @@ export default async function RootLayout({
               <Header />
               <main className="flex-1">{children}</main>
               <Footer />
+              <CampaignFloatingButton />
               <DynamicChatbotWidget appName={appName} initialMessage={initialMessage} />
             </div>
             <Toaster />

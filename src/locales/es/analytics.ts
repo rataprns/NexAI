@@ -4,6 +4,7 @@ export default {
     'intents-tab': 'Intenciones',
     'sentiment-tab': 'Sentimiento',
     'tool-performance-tab': 'Rendimiento de Herramientas',
+    'conversion-rate-tab': 'Tasa de Conversión',
     'intents': {
         'card-title': 'Distribución de Intenciones de Mensajes',
         'card-description': 'Este gráfico muestra la intención principal detrás de los mensajes de los usuarios.',
@@ -47,5 +48,15 @@ export default {
         'failed-calls-header': 'Fallidas',
         'success-rate-header': 'Tasa de Éxito',
         'no-data': 'Aún no hay datos de uso de herramientas.',
+    },
+    'conversion': {
+        'error-title': 'Error',
+        'error-description': 'No se pudieron cargar los datos de la tasa de conversión.',
+        'total-conversations-title': 'Conversaciones Totales',
+        'total-conversations-desc': 'Número total de sesiones de usuario únicas con el chatbot.',
+        'converted-sessions-title': 'Sesiones Convertidas',
+        'converted-sessions-desc': 'Número de conversaciones que resultaron en una cita agendada con éxito.',
+        'conversion-rate-title': 'Tasa de Conversión',
+        'conversion-rate-desc': 'El porcentaje de conversaciones que terminaron en una reserva.',
     }
 } as const;

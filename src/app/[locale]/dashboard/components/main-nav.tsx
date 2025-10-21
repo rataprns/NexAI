@@ -1,9 +1,8 @@
-
  "use client"
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, FilePenLine, Sparkles, Settings, UserCog, Calendar, Users, Mail, Share2, BarChart3, Package, MapPin } from "lucide-react"
+import { Home, FilePenLine, Sparkles, Settings, UserCog, Calendar, Users, Mail, Share2, BarChart3, Package, MapPin, Target } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useScopedI18n } from "@/locales/client"
 
@@ -23,6 +22,7 @@ export function MainNav({ isMobile = false, onLinkClick }: MainNavProps) {
         { href: "/dashboard/clients", icon: Users, label: t("clients") },
         { href: "/dashboard/services", icon: Package, label: t("services") },
         { href: "/dashboard/locations", icon: MapPin, label: t("locations") },
+        { href: "/dashboard/campaigns", icon: Target, label: t("campaigns") },
         { href: "/dashboard/channels", icon: Share2, label: t("channels") },
         { href: "/dashboard/editor", icon: FilePenLine, label: t("editor") },
         { href: "/dashboard/ai-settings", icon: Sparkles, label: t("ai-settings") },

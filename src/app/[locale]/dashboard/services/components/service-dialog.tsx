@@ -17,6 +17,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLocationsForServices } from "../_hooks/useServices";
+import { useActiveCampaigns } from "../../../dashboard/campaigns/_hooks/useCampaigns";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 
 interface ServiceDialogProps {
   isOpen: boolean;
@@ -30,6 +33,7 @@ export function ServiceDialog({ isOpen, onOpenChange, service, onSave, isSaving 
   const t = useScopedI18n("services");
 
   const { data: locations, isLoading: isLoadingLocations } = useLocationsForServices();
+  const { data: campaigns, isLoading: isLoadingCampaigns } = useActiveCampaigns();
 
   const form = useForm<ServiceDto>({
     resolver: zodResolver(serviceSchema),
@@ -40,9 +44,11 @@ export function ServiceDialog({ isOpen, onOpenChange, service, onSave, isSaving 
       imageUrl: '',
       duration: 30,
       price: 0,
+      offerPrice: '',
       currency: 'USD',
       customFields: [],
       locationIds: [],
+      campaignId: undefined,
     },
   });
 
@@ -53,7 +59,11 @@ export function ServiceDialog({ isOpen, onOpenChange, service, onSave, isSaving 
 
   useEffect(() => {
     if (service) {
-      form.reset(service);
+      form.reset({
+        ...service,
+        offerPrice: service.offerPrice ?? '',
+        campaignId: service.campaignId || undefined,
+      });
     } else {
       form.reset({
         name: '',
@@ -62,9 +72,11 @@ export function ServiceDialog({ isOpen, onOpenChange, service, onSave, isSaving 
         imageUrl: '',
         duration: 30,
         price: 0,
+        offerPrice: '',
         currency: 'USD',
         customFields: [],
         locationIds: [],
+        campaignId: undefined,
       });
     }
   }, [service, form, isOpen]);
@@ -130,7 +142,7 @@ export function ServiceDialog({ isOpen, onOpenChange, service, onSave, isSaving 
                     </FormItem>
                 )}
                 />
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                      <FormField
                     control={form.control}
                     name="price"
@@ -138,17 +150,6 @@ export function ServiceDialog({ isOpen, onOpenChange, service, onSave, isSaving 
                         <FormItem>
                         <FormLabel>{t('form-price-label')}</FormLabel>
                         <FormControl><Input type="number" {...field} /></FormControl>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                    />
-                    <FormField
-                    control={form.control}
-                    name="currency"
-                    render={({ field }) => (
-                        <FormItem>
-                        <FormLabel>{t('form-currency-label')}</FormLabel>
-                        <FormControl><Input {...field} maxLength={3} /></FormControl>
                         <FormMessage />
                         </FormItem>
                     )}
@@ -165,6 +166,56 @@ export function ServiceDialog({ isOpen, onOpenChange, service, onSave, isSaving 
                     )}
                     />
                 </div>
+                 <Separator />
+                 <div>
+                    <FormLabel>{t('form-campaign-offer-title')}</FormLabel>
+                    <FormDescription className="mb-4">{t('form-campaign-offer-desc')}</FormDescription>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                         <FormField
+                            control={form.control}
+                            name="offerPrice"
+                            render={({ field }) => (
+                                <FormItem>
+                                <FormLabel>{t('form-offer-price-label')}</FormLabel>
+                                <FormControl><Input type="number" {...field} placeholder="Ej: 99.99" /></FormControl>
+                                <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                         <FormField
+                            control={form.control}
+                            name="campaignId"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>{t('form-campaign-label')}</FormLabel>
+                                    <Select 
+                                        onValueChange={(value) => field.onChange(value === "none" ? null : value)} 
+                                        value={field.value || 'none'}
+                                    >
+                                        <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder={t('form-campaign-placeholder')} />
+                                        </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectItem value="none">Ninguna</SelectItem>
+                                            {isLoadingCampaigns ? (
+                                                <SelectItem value="loading" disabled>Cargando campañas...</SelectItem>
+                                            ) : (
+                                                campaigns?.map(campaign => (
+                                                    <SelectItem key={campaign.id} value={campaign.id}>{campaign.name}</SelectItem>
+                                                ))
+                                            )}
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                 </div>
+
+                 <Separator />
                 
                  <FormField
                   control={form.control}
@@ -251,3 +302,5 @@ export function ServiceDialog({ isOpen, onOpenChange, service, onSave, isSaving 
     </ResponsiveDialog>
   );
 }
+
+    

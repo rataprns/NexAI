@@ -27,6 +27,14 @@ const fetchToolPerformanceData = async () => {
     return res.json();
 };
 
+const fetchConversionRateData = async () => {
+    const res = await fetch('/api/analytics/conversion-rate');
+    if (!res.ok) {
+        throw new Error('Failed to fetch conversion rate analytics');
+    }
+    return res.json();
+}
+
 export function useIntentAnalytics() {
     return useQuery({
         queryKey: ['intentAnalytics'],
@@ -45,5 +53,12 @@ export function useToolPerformanceAnalytics() {
     return useQuery({
         queryKey: ['toolPerformanceAnalytics'],
         queryFn: fetchToolPerformanceData
+    });
+}
+
+export function useConversionRateAnalytics() {
+    return useQuery({
+        queryKey: ['conversionRateAnalytics'],
+        queryFn: fetchConversionRateData
     });
 }

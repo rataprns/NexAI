@@ -17,6 +17,8 @@ export class ServiceMapper {
       doc.createdAt,
       doc.updatedAt,
       doc.imageUrl,
+      doc.offerPrice,
+      doc.campaignId?.toString()
     );
   }
 }

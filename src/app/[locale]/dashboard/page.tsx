@@ -9,15 +9,16 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { useScopedI18n, useCurrentLocale } from "@/locales/client";
-import { Activity, ArrowUpRight, Calendar as CalendarIcon, Users, Edit, Clock } from "lucide-react";
+import { Activity, ArrowUpRight, Calendar as CalendarIcon, Users, Edit, Clock, Target, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { format, toZonedTime } from "date-fns-tz";
-import { AppointmentStatus } from "@/lib/types";
+import { AppointmentStatus, CampaignStatus } from "@/lib/types";
 import { es, enUS } from "date-fns/locale";
 import { useDashboard } from "./_hooks/useDashboard";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
 
 export default function DashboardPage() {
     const t = useScopedI18n("dashboard");
@@ -28,14 +29,16 @@ export default function DashboardPage() {
         session,
         clients, 
         appointments, 
-        settings, 
+        settings,
+        campaigns,
         isLoadingSession,
         isLoadingClients,
         isLoadingAppointments,
-        isLoadingSettings 
+        isLoadingSettings,
+        isLoadingCampaigns
     } = useDashboard();
     
-    const isLoading = isLoadingSession || isLoadingClients || isLoadingAppointments || isLoadingSettings;
+    const isLoading = isLoadingSession || isLoadingClients || isLoadingAppointments || isLoadingSettings || isLoadingCampaigns;
 
     const timeZone = settings?.timezone || 'America/Santiago';
 
@@ -43,6 +46,8 @@ export default function DashboardPage() {
     const totalAppointments = appointments?.length ?? 0;
     const upcomingAppointments = appointments?.filter(a => new Date(a.date) >= new Date() && a.status === AppointmentStatus.Scheduled).length ?? 0;
     const recentAppointments = appointments?.filter(a => a.status === AppointmentStatus.Scheduled).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 5) ?? [];
+    
+    const publishedCampaigns = campaigns?.filter(c => c.status === CampaignStatus.PUBLISHED) ?? [];
 
     if (isLoading) {
       return (
@@ -59,15 +64,15 @@ export default function DashboardPage() {
                 </Card>
               ))}
             </div>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-              <Card className="lg:col-span-4">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
+              <Card>
                 <CardHeader><Skeleton className="h-8 w-full" /></CardHeader>
                 <CardContent className="space-y-2">
                   <Skeleton className="h-10 w-full" />
                   <Skeleton className="h-10 w-full" />
                 </CardContent>
               </Card>
-              <Card className="lg:col-span-3">
+              <Card>
                 <CardHeader><Skeleton className="h-8 w-1/2" /></CardHeader>
                 <CardContent className="space-y-2">
                   <Skeleton className="h-10 w-full" />
@@ -119,8 +124,8 @@ export default function DashboardPage() {
           </Card>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="lg:col-span-4">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
+            <Card>
                 <CardHeader className="flex flex-row items-center">
                     <div className="grid gap-2">
                         <CardTitle>{t('recent-appointments-title')}</CardTitle>
@@ -165,34 +170,53 @@ export default function DashboardPage() {
                 </CardContent>
             </Card>
 
-            <Card className="lg:col-span-3">
-                <CardHeader>
-                    <CardTitle>{t('quick-actions-title')}</CardTitle>
-                    <CardDescription>{t('quick-actions-subtitle')}</CardDescription>
-                </CardHeader>
-                <CardContent className="grid gap-4">
-                   <Button asChild className="w-full justify-start" variant="outline">
-                        <Link href="/dashboard/appointments">
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {t('book-appointment-button')}
+            <Card>
+                <CardHeader className="flex flex-row items-center">
+                    <div className="grid gap-2">
+                        <CardTitle>{t('active-campaigns-title')}</CardTitle>
+                        <CardDescription>{t('active-campaigns-subtitle', {count: publishedCampaigns.length})}</CardDescription>
+                    </div>
+                     <Button asChild size="sm" className="ml-auto gap-1">
+                        <Link href="/dashboard/campaigns">
+                        {t('manage-all-button')}
+                        <ArrowUpRight className="h-4 w-4" />
                         </Link>
-                   </Button>
-                   <Link href="/dashboard/editor">
-                    <Button className="w-full justify-start" variant="outline">
-                        <Edit className="mr-2 h-4 w-4" />
-                        {t('edit-landing-button')}
                     </Button>
-                   </Link>
-                   <Link href="/dashboard/availability">
-                    <Button className="w-full justify-start" variant="outline">
-                        <Clock className="mr-2 h-4 w-4" />
-                        {t('manage-availability-button')}
-                    </Button>
-                   </Link>
+                </CardHeader>
+                <CardContent>
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>{t('table-header-campaign')}</TableHead>
+                                <TableHead className="text-right">{t('table-header-actions')}</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                         <TableBody>
+                             {publishedCampaigns.length > 0 ? (
+                                publishedCampaigns.slice(0, 5).map(campaign => (
+                                    <TableRow key={campaign.id}>
+                                        <TableCell>
+                                            <div className="font-medium">{campaign.name}</div>
+                                        </TableCell>
+                                        <TableCell className="text-right">
+                                            <Button asChild variant="ghost" size="icon">
+                                                <Link href={`/c/${campaign.slug}`} target="_blank" title="View Live">
+                                                    <Eye className="h-4 w-4" />
+                                                </Link>
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell colSpan={2} className="text-center">{t('no-active-campaigns')}</TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
                 </CardContent>
             </Card>
         </div>
-
       </div>
     </>
   )

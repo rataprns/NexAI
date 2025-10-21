@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,7 +10,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Bot, Send, X, Loader2 } from "lucide-react";
 import { ChatBubble } from "./chat-bubble";
 import { cn } from "@/lib/utils";
-import { useCurrentLocale } from "@/locales/client";
+import { useCurrentLocale, useScopedI18n } from "@/locales/client";
 
 type Message = {
   role: "user" | "bot";
@@ -26,41 +27,44 @@ export function ChatbotWidget({ appName, initialMessage }: ChatbotWidgetProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [senderId, setSenderId] = useState<string | null>(null);
-  const locale = useCurrentLocale();
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const [senderId, setSenderId] = useState<string>('');
 
+  const t = useScopedI18n("chatbot");
+  const locale = useCurrentLocale();
+  const pathname = usePathname();
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  
   useEffect(() => {
     let storedSenderId = localStorage.getItem('chatbot_sender_id');
     if (!storedSenderId) {
-      storedSenderId = `web-session-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+      const randomPart = Math.random().toString(36).substring(2, 9);
+      storedSenderId = `web-session-${Date.now()}-${randomPart}`;
       localStorage.setItem('chatbot_sender_id', storedSenderId);
     }
     setSenderId(storedSenderId);
 
-    const fetchHistory = async (id: string) => {
-        try {
-            const response = await fetch(`/api/chatbot/history?senderId=${id}`);
-            if (response.ok) {
-                const history = await response.json();
-                if (history && history.length > 0) {
-                    setMessages(history);
-                } else {
-                     setMessages([{ role: "bot", text: initialMessage }]);
-                }
+    const initializeChat = async (id: string) => {
+      try {
+        const response = await fetch(`/api/chatbot/history?senderId=${id}`);
+        if (response.ok) {
+            const history = await response.json();
+            if (history && history.length > 0) {
+                setMessages(history);
             } else {
                  setMessages([{ role: "bot", text: initialMessage }]);
             }
-        } catch (error) {
-            console.error("Failed to fetch chat history", error);
-            setMessages([{ role: "bot", text: initialMessage }]);
+        } else {
+             setMessages([{ role: "bot", text: initialMessage }]);
         }
+      } catch (error) {
+          console.error("Failed to fetch chat history", error);
+          setMessages([{ role: "bot", text: initialMessage }]);
+      }
     };
 
     if (storedSenderId) {
-        fetchHistory(storedSenderId);
-    } else {
-        setMessages([{ role: "bot", text: initialMessage }]);
+        initializeChat(storedSenderId);
     }
   }, [initialMessage]);
 
@@ -70,46 +74,53 @@ export function ChatbotWidget({ appName, initialMessage }: ChatbotWidgetProps) {
     }
   }, [messages, isLoading]);
 
-  const handleSendMessage = async (e: React.FormEvent) => {
-    e.preventDefault();
+  useEffect(() => {
+    if (isOpen) {
+      inputRef.current?.focus();
+    }
+  }, [isOpen]);
+
+  const handleSendMessage = async (e?: React.FormEvent) => {
+    e?.preventDefault();
     if (!input.trim() || !senderId) return;
 
     const userMessage: Message = { role: "user", text: input };
     const newMessages = [...messages, userMessage];
+    
     setMessages(newMessages);
+    const textToSend = input;
     setInput("");
     setIsLoading(true);
 
     try {
       const response = await fetch('/api/chatbot', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-          prompt: input, 
-          history: messages,
+          prompt: textToSend, 
+          history: newMessages, // Use the most up-to-date message list
           flowName: 'chatbotAnswerQuestions',
           language: locale,
-          sessionId: senderId, // Still using sessionId here as the backend expects it
+          sessionId: senderId, 
+          pathname: pathname,
         }),
       });
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
+      if (!response.ok) throw new Error('Network response was not ok');
 
       const data = await response.json();
       const botMessage: Message = { role: "bot", text: data.answer };
       setMessages((prev) => [...prev, botMessage]);
-
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Chatbot API Error:", error);
       const errorMessage: Message = { role: "bot", text: "Sorry, I'm having trouble connecting. Please try again later." };
       setMessages((prev) => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
   };
+
+  if (!appName) return null;
 
   return (
     <>
@@ -152,14 +163,15 @@ export function ChatbotWidget({ appName, initialMessage }: ChatbotWidgetProps) {
           <CardFooter>
             <form onSubmit={handleSendMessage} className="flex w-full items-center space-x-2">
               <Input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Type a message..."
-                disabled={isLoading}
+                  ref={inputRef}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder={t('input-placeholder')}
+                  disabled={isLoading}
               />
-              <Button type="submit" size="icon" disabled={isLoading || !senderId}>
-                <Send className="h-4 w-4" />
-                <span className="sr-only">Send</span>
+              <Button type="submit" size="icon" disabled={isLoading || !input.trim()}>
+                  <Send className="h-4 w-4" />
+                  <span className="sr-only">{t('send-button')}</span>
               </Button>
             </form>
           </CardFooter>

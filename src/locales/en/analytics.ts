@@ -4,6 +4,7 @@ export default {
     'intents-tab': 'Intents',
     'sentiment-tab': 'Sentiment',
     'tool-performance-tab': 'Tool Performance',
+    'conversion-rate-tab': 'Conversion Rate',
     'intents': {
         'card-title': 'Message Intent Distribution',
         'card-description': 'This chart shows the primary intent behind user messages.',
@@ -47,5 +48,15 @@ export default {
         'failed-calls-header': 'Failed',
         'success-rate-header': 'Success Rate',
         'no-data': 'No tool usage data available yet.',
+    },
+    'conversion': {
+        'error-title': 'Error',
+        'error-description': 'Could not load conversion rate data.',
+        'total-conversations-title': 'Total Conversations',
+        'total-conversations-desc': 'Total number of unique user sessions with the chatbot.',
+        'converted-sessions-title': 'Converted Sessions',
+        'converted-sessions-desc': 'Number of conversations that resulted in a successful appointment booking.',
+        'conversion-rate-title': 'Conversion Rate',
+        'conversion-rate-desc': 'The percentage of conversations that ended in a booking.',
     }
 } as const;

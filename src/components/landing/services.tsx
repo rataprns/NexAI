@@ -12,6 +12,8 @@ import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { useScopedI18n } from "@/locales/client";
 import { Location } from "@/modules/locations/domain/entities/location.entity";
 import { ServiceDetail } from "./service-detail";
+import { useActiveCampaigns } from "@/app/[locale]/dashboard/campaigns/_hooks/useCampaigns";
+import { Badge } from "../ui/badge";
 
 type ServicesProps = {
   services: Service[];
@@ -22,6 +24,7 @@ type ServicesProps = {
 export function Services({ services, servicesSection, locations }: ServicesProps) {
   const t = useScopedI18n("services");
   const [selectedService, setSelectedService] = useState<Service | null>(null);
+  const { data: activeCampaigns } = useActiveCampaigns();
 
   const content = useMemo(() => {
     return servicesSection || {
@@ -42,6 +45,18 @@ export function Services({ services, servicesSection, locations }: ServicesProps
     titleColor,
     subtitleColor,
   } = content;
+
+  const getCampaignForService = (service: Service) => {
+    if (!service.campaignId) return null;
+    return activeCampaigns?.find(c => c.id === service.campaignId);
+  }
+
+  const calculateDiscount = (originalPrice: number, offerPrice: number) => {
+      if (originalPrice <= 0 || offerPrice < 0 || offerPrice >= originalPrice) {
+          return 0;
+      }
+      return Math.round(((originalPrice - offerPrice) / originalPrice) * 100);
+  }
 
   return (
     <>
@@ -65,42 +80,73 @@ export function Services({ services, servicesSection, locations }: ServicesProps
         
         {services.length > 0 ? (
             <div className={cn(gridStyles)}>
-            {services.map((service) => (
-                <Card 
-                    key={service.id} 
-                    className="flex flex-col cursor-pointer transition-all hover:shadow-lg hover:-translate-y-1"
-                    onClick={() => setSelectedService(service)}
-                >
-                <CardHeader>
+            {services.map((service) => {
+                const campaign = getCampaignForService(service);
+                const hasOffer = campaign && typeof service.offerPrice === 'number';
+                const discountPercentage = hasOffer ? calculateDiscount(service.price, service.offerPrice!) : 0;
+
+                return (
+                    <Card 
+                        key={service.id} 
+                        className="flex flex-col cursor-pointer transition-all hover:shadow-lg hover:-translate-y-1 overflow-hidden"
+                        onClick={() => setSelectedService(service)}
+                    >
                     {service.imageUrl && (
-                        <div className="relative h-40 w-full mb-4">
-                            <Image src={service.imageUrl} alt={service.name} layout="fill" objectFit="cover" className="rounded-t-lg" />
+                        <div className="relative">
+                            <div className="relative h-40 w-full">
+                                <Image src={service.imageUrl} alt={service.name} layout="fill" objectFit="cover" />
+                            </div>
+                            {hasOffer && discountPercentage > 0 && (
+                                <Badge variant="destructive" className="absolute top-2 right-2 text-base">
+                                    {discountPercentage}% OFF
+                                </Badge>
+                            )}
+                            {hasOffer && campaign && (
+                                <Badge className="absolute top-2 left-2">{campaign.name}</Badge>
+                            )}
                         </div>
                     )}
-                    <CardTitle>{service.name}</CardTitle>
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                        <span>{service.duration} min</span>
-                        <span className="font-bold">{service.price.toFixed(2)} {service.currency}</span>
-                    </div>
-                </CardHeader>
-                <CardContent className="flex-1 flex flex-col">
-                    <CardDescription className="flex-1 line-clamp-3">{service.description}</CardDescription>
-                    {service.customFields.length > 0 && (
-                        <div className="mt-4 pt-4 border-t">
-                            <h4 className="font-semibold mb-2 text-sm">Details:</h4>
-                            <div className="space-y-1 text-xs text-muted-foreground">
-                                {service.customFields.map(field => (
-                                    <div key={field.label} className="flex items-start">
-                                        <Tag className="h-3 w-3 mr-2 mt-0.5 shrink-0" />
-                                        <span><strong>{field.label}:</strong> {field.value}</span>
-                                    </div>
-                                ))}
+                    <CardHeader>
+                        {!service.imageUrl && hasOffer && (
+                            <div className="flex justify-between items-start mb-2">
+                                {campaign && <Badge>{campaign.name}</Badge>}
+                                {discountPercentage > 0 && <Badge variant="destructive" className="text-base">{discountPercentage}% OFF</Badge>}
+                            </div>
+                        )}
+                        <CardTitle>{service.name}</CardTitle>
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                            <span>{service.duration} min</span>
+                             <div className="flex items-baseline gap-2">
+                                {hasOffer ? (
+                                    <>
+                                        <span className="font-bold text-lg text-primary">{service.offerPrice?.toFixed(2)} {service.currency}</span>
+                                        <span className="line-through text-xs">{service.price.toFixed(2)} {service.currency}</span>
+                                    </>
+                                ) : (
+                                    <span className="font-bold text-lg">{service.price.toFixed(2)} {service.currency}</span>
+                                )}
                             </div>
                         </div>
-                    )}
-                </CardContent>
-                </Card>
-            ))}
+                    </CardHeader>
+                    <CardContent className="flex-1 flex flex-col">
+                        <CardDescription className="flex-1 line-clamp-3">{service.description}</CardDescription>
+                        {service.customFields.length > 0 && (
+                            <div className="mt-4 pt-4 border-t">
+                                <h4 className="font-semibold mb-2 text-sm">Details:</h4>
+                                <div className="space-y-1 text-xs text-muted-foreground">
+                                    {service.customFields.map(field => (
+                                        <div key={field.label} className="flex items-start">
+                                            <Tag className="h-3 w-3 mr-2 mt-0.5 shrink-0" />
+                                            <span><strong>{field.label}:</strong> {field.value}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </CardContent>
+                    </Card>
+                )
+            })}
             </div>
         ) : (
             <Alert className="max-w-2xl mx-auto">

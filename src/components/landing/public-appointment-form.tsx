@@ -17,9 +17,11 @@ import type { Location } from "@/modules/locations/domain/entities/location.enti
 import { Service } from "@/modules/services/domain/entities/service.entity";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
-import { Info, ArrowRight, Copy } from "lucide-react";
+import { Info, ArrowRight, Copy, Tag } from "lucide-react";
 import { ServiceDetail } from "./service-detail";
 import type { Setting } from "@/modules/settings/domain/entities/setting.entity";
+import { useActiveCampaigns } from "@/app/[locale]/dashboard/campaigns/_hooks/useCampaigns";
+import { Badge } from "../ui/badge";
 
 const fetchAvailability = async (date: Date, locationId: string): Promise<string[]> => {
     if (!date || !locationId) return [];
@@ -73,17 +75,31 @@ export function PublicAppointmentForm({ locations, settings }: { locations: Loca
       queryKey: ['activeServices'],
       queryFn: fetchServices
   });
+  
+  const { data: activeCampaigns } = useActiveCampaigns();
 
   const { data: busySlots = [], isLoading: isLoadingAvailability } = useQuery({
     queryKey: ['availability', selectedLocationId, selectedDate ? format(selectedDate, "yyyy-MM-dd") : ''],
     queryFn: () => fetchAvailability(selectedDate!, selectedLocationId!),
-    enabled: !!selectedDate && !!selectedLocationId,
+    enabled: !!selectedDate && !!selectedServiceId,
   });
 
   const timeZone = settings?.timezone || 'America/Santiago';
 
   const selectedService = allServices?.find(s => s.id === selectedServiceId);
   const selectedLocation = locations.find(l => l.id === selectedLocationId);
+  
+  const campaignForService = selectedService?.campaignId ? activeCampaigns?.find(c => c.id === selectedService.campaignId) : null;
+  const hasOffer = campaignForService && typeof selectedService.offerPrice === 'number';
+
+  const calculateDiscount = (originalPrice: number, offerPrice: number) => {
+    if (originalPrice <= 0 || offerPrice < 0 || offerPrice >= originalPrice) {
+        return 0;
+    }
+    return Math.round(((originalPrice - offerPrice) / originalPrice) * 100);
+  }
+
+  const discountPercentage = selectedService && hasOffer ? calculateDiscount(selectedService.price, selectedService.offerPrice!) : 0;
 
   const handleSubmit = async () => {
     if (!name || !email || !selectedLocationId || !selectedServiceId || !selectedDate || !selectedTime) {
@@ -243,19 +259,37 @@ export function PublicAppointmentForm({ locations, settings }: { locations: Loca
                 </Select>
             </div>
             {selectedService && selectedLocation && (
-              <Card className="bg-muted/50 p-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                      <div className="flex-1">
-                          <h4 className="font-semibold">{selectedService.name}</h4>
-                          <p className="text-sm text-muted-foreground">
-                            {selectedLocation.name} - {selectedService.duration} min - ${selectedService.price} {selectedService.currency}
-                          </p>
-                      </div>
-                      <Button variant="secondary" onClick={() => setIsDetailOpen(true)} className="w-full sm:w-auto">
-                          Ver Detalles <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
-                  </div>
-              </Card>
+                <Card className="bg-muted/50 p-4 relative overflow-hidden">
+                    {hasOffer && discountPercentage > 0 && (
+                        <Badge variant="destructive" className="absolute top-0 right-0 m-2 text-base z-10">
+                            {discountPercentage}% OFF
+                        </Badge>
+                    )}
+                    {hasOffer && campaignForService && (
+                        <Badge className="absolute top-0 left-0 m-2 z-10">{campaignForService.name}</Badge>
+                    )}
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-8">
+                        <div className="flex-1">
+                            <h4 className="font-semibold">{selectedService.name}</h4>
+                            <p className="text-sm text-muted-foreground mb-1">
+                                {selectedLocation.name} - {selectedService.duration} min
+                            </p>
+                            <div className="flex items-baseline gap-2">
+                                {hasOffer ? (
+                                    <>
+                                        <span className="font-bold text-lg text-primary">{selectedService.offerPrice?.toFixed(2)} {selectedService.currency}</span>
+                                        <span className="line-through text-sm text-muted-foreground">{selectedService.price.toFixed(2)} {selectedService.currency}</span>
+                                    </>
+                                ) : (
+                                    <span className="font-bold text-lg">{selectedService.price.toFixed(2)} {selectedService.currency}</span>
+                                )}
+                            </div>
+                        </div>
+                        <Button variant="secondary" onClick={() => setIsDetailOpen(true)} className="w-full sm:w-auto">
+                            Ver Detalles <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                    </div>
+                </Card>
             )}
             <div className="grid sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -315,7 +349,7 @@ export function PublicAppointmentForm({ locations, settings }: { locations: Loca
     {selectedService && (
         <ServiceDetail
           isOpen={isDetailOpen}
-          onOpenChange={(open) => !open && setSelectedServiceId(null)}
+          onOpenChange={setIsDetailOpen}
           service={selectedService}
           locations={locations.filter(l => selectedService.locationIds.includes(l.id))}
         />
@@ -323,3 +357,5 @@ export function PublicAppointmentForm({ locations, settings }: { locations: Loca
     </>
   );
 }
+
+    

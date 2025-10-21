@@ -87,4 +87,8 @@ export const SERVICE_KEYS = {
     // Location Module
     LocationRepository: 'LocationRepository',
     LocationService: 'LocationService',
+
+    // Campaign Module
+    CampaignRepository: 'CampaignRepository',
+    CampaignService: 'CampaignService',
 };

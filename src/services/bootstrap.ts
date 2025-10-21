@@ -23,6 +23,7 @@ import { bootstrapAnalyticsModule } from '@/modules/analytics/factories/analytic
 import { bootstrapServiceModule } from '@/modules/services/factories/service.bootstrap';
 import { bootstrapServicesSectionModule } from '@/modules/services-section/factories/services-section.bootstrap';
 import { bootstrapLocationModule } from '@/modules/locations/factories/location.bootstrap';
+import { bootstrapCampaignModule } from '@/modules/campaigns/factories/campaign.bootstrap';
 
 let servicesInitialized = false;
 
@@ -53,6 +54,7 @@ export function initializeServices(): void {
   bootstrapServiceModule();
   bootstrapServicesSectionModule();
   bootstrapLocationModule();
+  bootstrapCampaignModule();
 
   servicesInitialized = true;
 }

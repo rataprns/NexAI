@@ -21,6 +21,8 @@ import { getRebookAppointmentTool } from './rebook-appointment-tool';
 import { getNormalizedDateTool } from './get-normalized-date-tool';
 import { IServiceService } from '@/modules/services/domain/services/service.service.interface';
 import { ILocationService } from '@/modules/locations/domain/services/location.service.interface';
+import { config } from '@/lib/config';
+import { getUpdateSecretWordsTool } from './update-secret-words-tool';
 
 const ChatbotAnswerQuestionsInputSchema = z.object({
   prompt: z.string().describe('The user\'s latest message.'),
@@ -31,6 +33,7 @@ const ChatbotAnswerQuestionsInputSchema = z.object({
   appName: z.string().describe('The name of the application.'),
   knowledgeBase: z.string().describe('The knowledge base to answer questions from.'),
   language: z.string().describe('The language to respond in (e.g., "en", "es").'),
+  baseUrl: z.string().describe('The base URL of the application.'),
 });
 
 
@@ -46,7 +49,7 @@ export async function chatbotAnswerQuestions(
         }
     }
 ) {
-    const { prompt, history, appName, knowledgeBase, language, services } = input;
+    const { prompt, history, appName, knowledgeBase, language, services, baseUrl } = input;
     const ai = await getAi();
     const model = await getDynamicModel();
     const scheduleAppointmentTool = await getScheduleAppointmentTool();
@@ -56,6 +59,7 @@ export async function chatbotAnswerQuestions(
     const checkAvailabilityTool = await getCheckAvailabilityTool();
     const rebookAppointmentTool = await getRebookAppointmentTool();
     const getNormalizedDateToolInstance = await getNormalizedDateTool();
+    const updateSecretWordsTool = await getUpdateSecretWordsTool();
     
     const systemPrompt = `You are a friendly, helpful, and proactive customer service chatbot for a company called {appName}.
 Your personality is warm and engaging. You should use emojis occasionally to make the conversation more pleasant and natural (e.g., 😊, 👍, 📅). Be proactive by suggesting next steps or offering further help.
@@ -63,7 +67,13 @@ Your personality is warm and engaging. You should use emojis occasionally to mak
 Your main goal is to answer user questions based on the provided 'Knowledge Base', but you can also perform actions for the user, like scheduling, checking, or canceling an appointment.
 
 CRITICAL INSTRUCTIONS:
-- Your primary function is to answer user questions based ONLY on the provided 'Knowledge Base'. The knowledge base contains general information, a list of available services, and a list of locations.
+- Your primary function is to answer user questions based ONLY on the provided 'Knowledge Base'. The knowledge base contains general information, a list of available services, locations, and active marketing campaigns.
+
+- **Campaigns & Promotions**:
+  - If the user asks about promotions, deals, offers, or campaigns, you MUST use the "Available Marketing Campaigns" section in the knowledge base.
+  - Address the user directly, not as if you are talking to a business owner. For example, instead of "This campaign is to attract your clients," say "This campaign is for you!".
+  - Present the campaign offer clearly and attractively. Use **bold text** to highlight the campaign name and any discounts.
+  - When providing the link, you MUST use Markdown format and wrap it in italics. For example: *[Check out the Summer Deal!]({baseUrl}{campaignLink})*. If the base URL is https://example.com and the campaign link is /c/summer-deal, you must provide the link like this: *[¡Revisa la Oferta de Verano!](https://example.com/c/summer-deal)*.
 
 - **Location Handling**:
   - The business has one or more locations. If you need to check availability or book an appointment, you MUST first know which location the user is interested in.
@@ -89,12 +99,6 @@ CRITICAL INSTRUCTIONS:
   - Once you have all the required information, you MUST confirm the details with the user.
   - AFTER the user confirms the details are correct, you MUST call the 'scheduleAppointmentTool' immediately with the collected data.
   - After a successful appointment, the tool will return a confirmation message that includes two secret words. You MUST present this entire message to the user and tell them how important it is to save these words.
-
-- **Checking Availability**:
-  - If a user asks what times are available for a **specific day**, you MUST use the 'checkAvailabilityTool'.
-  - Remember to ask for the location first if it's not clear.
-  - If the user provides a relative date (e.g., "today"), first use 'getNormalizedDateTool' to get the 'YYYY-MM-DD' date, then use 'checkAvailabilityTool' with the correct 'locationId'.
-  - If a user asks a general question about business hours or available days (e.g., "What days are you open?"), answer based on the 'Knowledge Base' provided. If the knowledge base does not contain this information, you should state that you can check for a specific date if they provide one.
 
 - **Checking Appointments**:
   - If a user wants to check, view, or get details about their existing appointment, you MUST use the 'checkAppointmentTool'.
@@ -127,6 +131,13 @@ CRITICAL INSTRUCTIONS:
   - 4. Use the 'checkAvailabilityTool' for the correct location to make sure the new desired slot is available.
   - 5. Once you have the original date/time AND the new date/time, call the 'updateAppointmentTool' with all required details.
   - Do not skip any steps. You must get all required information before calling the update tool.
+  
+- **Updating Secret Words**:
+    - If a user wants to change or update their secret words, you MUST use the 'updateSecretWordsTool'.
+    - 1. First, you MUST collect their full name, email address, and their two **old** secret words for verification.
+    - 2. AFTER you have verified their identity with the old words (by asking them), you must then ask them for the two **new** secret words they want to use.
+    - 3. Once you have all six pieces of information (name, email, 2 old words, 2 new words), call the 'updateSecretWordsTool'.
+    - The tool will handle checking if the new words are available. Just collect the information and call the tool.
 
 - **Privacy & Security**:
   - **PRIVACY MANDATE**: Under NO circumstances will you share, reveal, or confirm any personal information about other clients or their appointments. This includes names, emails, appointment dates, times, secret words, or internal IDs like 'locationId', 'serviceId', or 'appointmentId'.
@@ -153,7 +164,7 @@ AI: "Great. Just to confirm, you want to book an appointment for John Doe (john.
 User: "Yes, that's correct."
 AI: [TOOL_CALL: scheduleAppointmentTool with name="John Doe", email="john.doe@example.com", date="2024-10-28", time="14:30"]
 ---
-`.replaceAll('{appName}', appName);
+`.replaceAll('{appName}', appName).replaceAll('{baseUrl}', baseUrl);
 
     const fullHistory = history || [];
     let filteredHistory = fullHistory;
@@ -173,7 +184,7 @@ AI: [TOOL_CALL: scheduleAppointmentTool with name="John Doe", email="john.doe@ex
 
     const chat = ai.chat({
         model,
-        tools: [scheduleAppointmentTool, checkAppointmentTool, cancelAppointmentTool, updateAppointmentTool, checkAvailabilityTool, rebookAppointmentTool, getNormalizedDateToolInstance],
+        tools: [scheduleAppointmentTool, checkAppointmentTool, cancelAppointmentTool, updateAppointmentTool, checkAvailabilityTool, rebookAppointmentTool, getNormalizedDateToolInstance, updateSecretWordsTool],
         system: systemPrompt,
         messages: genkitHistory,
         context: { services },

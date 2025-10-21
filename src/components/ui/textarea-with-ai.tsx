@@ -10,7 +10,7 @@ import { Input } from "./input";
 import { Button } from "./button";
 
 async function callAIFlow(flowName: 'improveText', payload: any) {
-  const response = await fetch('/api/chatbot', {
+  const response = await fetch('/api/ai-tools', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ flowName, ...payload }),

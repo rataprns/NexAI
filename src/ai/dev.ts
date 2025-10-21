@@ -22,3 +22,6 @@ import '@/ai-flows/rebook-appointment-tool';
 import '@/ai/flows/get-normalized-date-tool';
 import '@/ai/flows/classify-message-intent';
 import '@/ai/flows/analyze-message-sentiment';
+import '@/ai/flows/generate-campaign-content';
+import '@/ai/flows/suggest-campaign-idea';
+import '@/ai/flows/update-secret-words-tool';

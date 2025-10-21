@@ -1,5 +1,4 @@
 
-
 import { NextRequest, NextResponse } from 'next/server';
 import { createAppointmentSchema, createPublicAppointmentSchema } from '@/modules/scheduling/application/dtos/appointment.dto';
 import { getSession } from '@/lib/auth';
@@ -10,6 +9,7 @@ import { SERVICE_KEYS } from '@/config/service-keys-const';
 import { UserRole } from '@/modules/users/domain/entities/user-role.enum';
 import { fromZonedTime, toZonedTime, format } from 'date-fns-tz';
 import { ISettingService } from '@/modules/settings/domain/services/setting.service.interface';
+import { ClientType } from '@/modules/clients/domain/entities/client-type.enum';
 
 const getSchedulingService = () => resolve<ISchedulingService>(SERVICE_KEYS.SchedulingService);
 const getClientService = () => resolve<IClientService>(SERVICE_KEYS.ClientService);
@@ -20,6 +20,9 @@ async function createHandler(req: NextRequest) {
     const session = await getSession();
     const body = await req.json();
     
+    // A bit of a hack to get senderId if it exists from chatbot webhook
+    const senderId = body.sessionId;
+
     const handleBooking = async (validation: any) => {
         if (!validation.success) {
             return NextResponse.json({ message: 'Invalid input', errors: validation.error.flatten() }, { status: 400 });
@@ -34,10 +37,12 @@ async function createHandler(req: NextRequest) {
         
         const finalUtcDate = fromZonedTime(dateTimeString, timeZone);
         
-        let client = await getClientService().findClientByEmail(email);
-        if (!client) {
-            client = await getClientService().createClient({ email, name });
-        }
+        const client = await getClientService().createOrUpdateClient({
+          email,
+          name,
+          senderId,
+          type: ClientType.CLIENT,
+        });
 
         const appointment = await getSchedulingService().createAppointment({
             date: finalUtcDate,

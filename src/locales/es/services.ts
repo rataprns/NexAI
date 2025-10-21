@@ -35,6 +35,7 @@ export default {
     'form-image-url-label': 'URL de la Imagen (Opcional)',
     'form-image-url-desc': 'Una imagen representativa para tu servicio.',
     'form-price-label': 'Precio',
+    'form-offer-price-label': 'Precio de Oferta',
     'form-currency-label': 'Moneda (ISO)',
     'form-duration-label': 'Duración (minutos)',
     'form-locations-label': 'Sucursales Disponibles',
@@ -44,6 +45,10 @@ export default {
     'form-add-custom-field-button': 'Añadir Detalle',
     'custom-field-label-placeholder': 'Etiqueta (ej. Especialista)',
     'custom-field-value-placeholder': 'Valor (ej. Dr. García)',
+    'form-campaign-label': 'Campaña Asociada (Opcional)',
+    'form-campaign-placeholder': 'Selecciona una campaña',
+    'form-campaign-offer-title': 'Oferta de Campaña (Opcional)',
+    'form-campaign-offer-desc': 'Si este servicio es parte de una campaña, define un precio especial y vincúlalo.',
 
     'dialog-cancel-button': 'Cancelar',
     'dialog-save-button': 'Guardar Servicio',
@@ -53,4 +58,10 @@ export default {
     'delete-confirm-description': 'Esta acción no se puede deshacer. Esto eliminará permanentemente el servicio.',
     'delete-confirm-cancel': 'Cancelar',
     'delete-confirm-delete': 'Sí, eliminar',
+
+    // Vista de Detalles
+    'detail-duration': 'Duración',
+    'detail-minutes': 'minutos',
+    'detail-available-at': 'Disponible en',
+    'detail-additional-details': 'Detalles Adicionales',
 } as const;

@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { Appointment } from "@/modules/scheduling/domain/entities/appointment.entity";
 import type { Client } from "@/modules/clients/domain/entities/client.entity";
 import type { UpdateSettingDto } from "@/modules/settings/application/dtos/setting.dto";
+import { Campaign } from "@/modules/campaigns/domain/entities/campaign.entity";
 
 const fetchDashboardData = async <T>(url: string): Promise<T> => {
     const res = await fetch(url);
@@ -46,15 +47,24 @@ export function useDashboard() {
         queryFn: () => fetchDashboardData<UpdateSettingDto>('/api/settings'),
         enabled: !!session,
     });
+    
+    const { data: campaigns, isLoading: isLoadingCampaigns } = useQuery<Campaign[]>({
+        queryKey: ['campaigns'],
+        queryFn: () => fetchDashboardData<Campaign[]>('/api/campaigns'),
+        enabled: !!session,
+    });
+
 
     return {
         session,
         clients,
         appointments,
         settings,
+        campaigns,
         isLoadingSession,
         isLoadingClients,
         isLoadingAppointments,
-        isLoadingSettings
+        isLoadingSettings,
+        isLoadingCampaigns,
     };
 }

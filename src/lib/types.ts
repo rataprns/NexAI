@@ -3,3 +3,8 @@ export enum AppointmentStatus {
   Cancelled = 'CANCELLED',
   Completed = 'COMPLETED',
 }
+
+export enum CampaignStatus {
+    DRAFT = 'DRAFT',
+    PUBLISHED = 'PUBLISHED',
+}

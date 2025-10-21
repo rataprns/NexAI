@@ -13,9 +13,12 @@ export const serviceSchema = z.object({
   imageUrl: z.string().url().optional().or(z.literal('')),
   duration: z.coerce.number().min(0, "Duration must be a positive number"),
   price: z.coerce.number().min(0, "Price must be a positive number"),
+  offerPrice: z.union([z.coerce.number().min(0), z.literal('')]).optional()
+    .transform(value => value === '' ? undefined : value),
   currency: z.string().min(3, "Currency code must be 3 characters").max(3, "Currency code must be 3 characters").default('USD'),
   customFields: z.array(customFieldSchema).optional(),
   locationIds: z.array(z.string()).optional(),
+  campaignId: z.string().optional().nullable(),
 });
 
 export const updateServiceSchema = serviceSchema.extend({
@@ -24,3 +27,5 @@ export const updateServiceSchema = serviceSchema.extend({
 
 export type ServiceDto = z.infer<typeof serviceSchema>;
 export type UpdateServiceDto = z.infer<typeof updateServiceSchema>;
+
+    

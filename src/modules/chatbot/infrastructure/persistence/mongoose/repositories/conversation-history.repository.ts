@@ -11,6 +11,12 @@ export class MongooseConversationHistoryRepository implements IConversationHisto
     const doc = await ConversationHistoryModel.findOne({ senderId });
     return doc ? ConversationHistoryMapper.toDomain(doc) : null;
   }
+  
+  public async findBySenderIdFuzzy(searchString: string): Promise<ConversationHistory | null> {
+    await dbConnect();
+    const doc = await ConversationHistoryModel.findOne({ senderId: { $regex: searchString, $options: 'i' } });
+    return doc ? ConversationHistoryMapper.toDomain(doc) : null;
+  }
 
   public async upsert(conversation: ConversationHistory): Promise<void> {
     await dbConnect();
@@ -31,10 +37,5 @@ export class MongooseConversationHistoryRepository implements IConversationHisto
     await ConversationHistoryModel.deleteMany({
       lastInteraction: { $lt: expirationDate },
     });
-  }
-
-  public async deleteById(id: string): Promise<void> {
-    await dbConnect();
-    await ConversationHistoryModel.findByIdAndDelete(id);
   }
 }

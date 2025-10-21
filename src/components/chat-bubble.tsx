@@ -1,6 +1,11 @@
+
+"use client";
+
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Bot, User } from "lucide-react";
+import React from "react";
+import ReactMarkdown from 'react-markdown';
 
 interface ChatBubbleProps {
   message: {
@@ -29,7 +34,15 @@ export function ChatBubble({ message }: ChatBubbleProps) {
             : "bg-muted flex-1"
         )}
       >
-        <p>{message.text}</p>
+        <div className="prose prose-sm prose-p:whitespace-pre-wrap dark:prose-invert prose-a:text-primary hover:prose-a:text-primary/80 prose-a:underline">
+            <ReactMarkdown
+                 components={{
+                    a: ({ node, ...props }) => <a {...props} target="_blank" rel="noopener noreferrer" />,
+                 }}
+            >
+                {message.text}
+            </ReactMarkdown>
+        </div>
       </div>
       {isUser && (
         <Avatar className="h-8 w-8">

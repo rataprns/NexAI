@@ -17,9 +17,11 @@ export class Service {
     imageUrl?: string;
     duration: number;
     price: number;
+    offerPrice?: number;
     currency: string;
     customFields: CustomField[];
     locationIds: string[];
+    campaignId?: string;
     createdAt: Date;
     updatedAt: Date;
   
@@ -35,7 +37,9 @@ export class Service {
       locationIds: string[],
       createdAt: Date,
       updatedAt: Date,
-      imageUrl?: string
+      imageUrl?: string,
+      offerPrice?: number,
+      campaignId?: string,
     ) {
       this.id = id;
       this.name = name;
@@ -43,9 +47,11 @@ export class Service {
       this.isActive = isActive;
       this.duration = duration;
       this.price = price;
+      this.offerPrice = offerPrice;
       this.currency = currency;
       this.customFields = customFields;
       this.locationIds = locationIds;
+      this.campaignId = campaignId;
       this.createdAt = createdAt;
       this.updatedAt = updatedAt;
       this.imageUrl = imageUrl;

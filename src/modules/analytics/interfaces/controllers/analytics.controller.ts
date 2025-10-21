@@ -92,8 +92,42 @@ async function getToolPerformanceAnalyticsHandler(req: NextRequest) {
   }
 }
 
+async function getConversionRateAnalyticsHandler(req: NextRequest) {
+    try {
+        const { isAuthenticated } = await verifySession();
+        if (!isAuthenticated) {
+            return NextResponse.json({ message: "Authentication required" }, { status: 401 });
+        }
+
+        await dbConnect();
+
+        // Get total unique user sessions (conversations)
+        const totalConversations = await MessageAnalyticModel.distinct("senderId").countDocuments();
+
+        // Get number of unique users who successfully booked an appointment
+        const successfulBookings = await ToolCallAnalyticModel.distinct("senderId", {
+            toolName: "scheduleAppointmentTool",
+            wasSuccessful: true,
+        });
+        const convertedSessions = successfulBookings.length;
+        
+        const conversionRate = totalConversations > 0 ? (convertedSessions / totalConversations) * 100 : 0;
+
+        return NextResponse.json({
+            totalConversations,
+            convertedSessions,
+            conversionRate,
+        });
+
+    } catch (error: any) {
+        return NextResponse.json({ message: error.message }, { status: 500 });
+    }
+}
+
+
 export const analyticsController = {
     getIntentAnalyticsHandler,
     getSentimentAnalyticsHandler,
     getToolPerformanceAnalyticsHandler,
+    getConversionRateAnalyticsHandler,
 };
